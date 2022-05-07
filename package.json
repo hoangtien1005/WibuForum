@@ -1,0 +1,25 @@
+{
+  "name": "wibuforum",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hoangtien1005/WibuForum.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hoangtien1005/WibuForum/issues"
+  },
+  "homepage": "https://github.com/hoangtien1005/WibuForum#readme",
+  "devDependencies": {
+    "husky": "^4.3.8",
+    "lint-staged": "^12.4.1",
+    "prettier": "^2.6.2"
+  }
+}
