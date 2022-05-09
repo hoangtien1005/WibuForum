@@ -1,6 +1,6 @@
 import { BrowserRouter, Route, Switch } from "react-router-dom"
 
-import "./App.scss"
+// import "./App.scss"
 import PageNotFound from "./components/PageNotFound"
 import HomeTemplate from "./containers/HomeTemplate"
 import { routeHome } from "./routes"
