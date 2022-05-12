@@ -2,10 +2,10 @@
 
 .header {
     background-color: $color-bg-dark !important;
-    margin-bottom: 80px;
+    padding: 0 calc((100% - 1200px) / 2);
 }
 
-.btnLogin, .btnRegister {
+.btnLogin, .btnSignUp {
     align-self: center;
     height: fit-content;
     margin-left: 16px;

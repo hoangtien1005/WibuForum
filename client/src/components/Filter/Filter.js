@@ -1,6 +1,10 @@
 import { useMemo, memo } from "react"
+import useMediaQuery from "@mui/material/useMediaQuery"
 import Select from "react-select"
-import { useLocation } from "react-router-dom"
+import { useHistory, useLocation } from "react-router-dom"
+
+import styles from "./styles.module.scss"
+import { PATHS } from "../../routes"
 
 const customTextStyles = {
   fontSize: "15px",
@@ -10,6 +14,11 @@ const customTextStyles = {
 const colorPrimary = "#18c1f0"
 
 const customStyles = {
+  container: (provided) => ({
+    ...provided,
+    boxShadow:
+      "0 14px 30px rgba(103,132,187,.1),0 4px 4px rgba(103,132,187,.04)"
+  }),
   placeholder: (provided) => ({
     ...provided,
     color: "#8ba0b2",
@@ -29,7 +38,6 @@ const customStyles = {
   indicatorSeparator: (provided) => ({
     display: "none"
   }),
-
   option: (provided, state) => {
     let color = state.isSelected ? colorPrimary : "#748899"
     let backgroundColor = provided.backgroundColor
@@ -37,6 +45,11 @@ const customStyles = {
     if (state.isFocused) color = colorPrimary
     return { ...provided, color, backgroundColor, ...customTextStyles }
   },
+  menu: (provided) => ({
+    ...provided,
+    border: "none",
+    animation: "slideFromTop 0.15s"
+  }),
   singleValue: (provided, state) => {
     const opacity = state.isDisabled ? 0.5 : 1
     const transition = "opacity 300ms"
@@ -52,43 +65,56 @@ const customStyles = {
     ...provided,
     backgroundColor: colorPrimary,
     borderRadius: "6px",
-    color: "#fff"
+    color: "#fbfbfb"
   }),
   multiValueLabel: (provided) => ({
     ...provided,
-    color: "#fff"
+    color: "#fbfbfb"
   })
 }
 
-const Component = ({ title, options, type, multiple }) => {
+const Component = ({ options, type, multiple, dataType }) => {
   const location = useLocation()
-  const query = useMemo(() => {
+  const history = useHistory()
+  const isMedium = useMediaQuery("(min-width:600px)")
+  const params = useMemo(() => {
     return new URLSearchParams(location.search)
   }, [location.search])
 
+  // calculate the default value for the filters
   const defaultValue = useMemo(() => {
-    const temp = query.get(type)
-
-    if (multiple && temp) {
+    const paramsValue = params.get(type)
+    // multiple value filters
+    if (multiple && paramsValue) {
       const res = []
-      for (const value of temp.split(",")) {
-        res.push(options.find((option) => option.label.toLowerCase() === value))
+      for (const value of paramsValue.split(",")) {
+        res.push(options.find((option) => option.value === value))
       }
       return res
-    } else if (temp) {
-      return options.find((option) => option.label.toLowerCase() === temp)
+      // single value filters
+    } else if (paramsValue) {
+      return options.find((option) => option.value === paramsValue)
     }
-  }, [multiple, options, query, type])
-
-  console.log(title, "render")
+  }, [multiple, options, params, type])
 
   const handleChange = (selectedOptions) => {
-    console.log(selectedOptions)
+    let value = ""
+    if (multiple) {
+      value = selectedOptions.map((option) => option.value).join(",")
+    } else {
+      value = selectedOptions ? selectedOptions.value : ""
+    }
+    value === "" ? params.delete(type) : params.set(type, value)
+    history.replace({
+      pathname: PATHS[dataType].SEARCH,
+      search: params.toString()
+    })
   }
+
   return (
     <Select
       isClearable
-      isSearchable
+      isSearchable={isMedium}
       closeMenuOnSelect={!multiple}
       onChange={handleChange}
       hideSelectedOptions={false}
