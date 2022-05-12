@@ -1,100 +1,12 @@
-import { ANIME_CONSTANTS } from "./constants"
+import { MEDIA_CONSTANTS } from "./constants"
 
-const { GENRES, SEASON, FORMATS, STATUS } = ANIME_CONSTANTS
-
-function capitalizeFirstLetter(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1)
-}
-
-export const generateApiParameters = (searchString) => {
-  if (!searchString) {
-    return ""
-  }
-
-  const res = []
-  const rawParamsStrings = searchString.slice(1).split("&")
-  rawParamsStrings.forEach((string) => {
-    const [type, value] = string.split("=")
-    switch (type) {
-      case "year":
-      case "page":
-        res.push(string)
-        break
-
-      case "genres":
-        {
-          const genresValue = value
-            .split(",")
-            .map((genre) => capitalizeFirstLetter(genre))
-            .join(",")
-          res.push([type, genresValue].join("="))
-        }
-        break
-
-      case "formats":
-      case "season":
-      case "status":
-        {
-          const standardValue = getAnimeConstantsKey(
-            type,
-            capitalizeFirstLetter(value)
-          )
-          res.push([type, standardValue].join("="))
-        }
-        break
-      default:
-        throw new Error("Invalid search parameters.")
-    }
-  })
-  if (res.length > 0) return res.join("&")
-  return ""
-}
-
-export const getAnimeConstantsValue = (type, key) => {
-  switch (type) {
-    case "genres":
-      return GENRES.find((genre) => genre === key)
-    case "season":
-      return SEASON[parseInt(key)]
-    case "formats":
-      return FORMATS[parseInt(key)]
-    case "status":
-      return STATUS[parseInt(key)]
-    default:
-      return null
-  }
-}
-
-export const getAnimeConstantsKey = (type, value) => {
-  const getKeyByValue = (obj, value) => {
-    return Object.keys(obj).find((key) => {
-      return (
-        obj[key] === value ||
-        obj[key] === capitalizeFirstLetter(value) ||
-        obj[key] === value.toUpperCase()
-      )
-    })
-  }
-
-  switch (type) {
-    case "genres":
-      return GENRES.find((genre) => genre === value)
-    case "season":
-      return getKeyByValue(SEASON, value)
-    case "formats":
-      return getKeyByValue(FORMATS, value)
-    case "status":
-      return getKeyByValue(STATUS, value)
-    default:
-      return null
-  }
-}
+const { SEASON } = MEDIA_CONSTANTS
 
 // get the current season
 export const getCurrentSeason = (d = new Date()) => {
   const seasonArray = [
     {
-      value: 0,
+      value: "WINTER",
       label: "Winter",
       date: new Date(
         d.getFullYear(),
@@ -103,7 +15,7 @@ export const getCurrentSeason = (d = new Date()) => {
       ).getTime()
     },
     {
-      value: 1,
+      value: "SPRING",
       label: "Spring",
       date: new Date(
         d.getFullYear(),
@@ -112,7 +24,7 @@ export const getCurrentSeason = (d = new Date()) => {
       ).getTime()
     },
     {
-      value: 2,
+      value: "SUMMER",
       label: "Summer",
       date: new Date(
         d.getFullYear(),
@@ -121,7 +33,7 @@ export const getCurrentSeason = (d = new Date()) => {
       ).getTime()
     },
     {
-      value: 3,
+      value: "FALL",
       label: "Fall",
       date: new Date(
         d.getFullYear(),
@@ -132,8 +44,63 @@ export const getCurrentSeason = (d = new Date()) => {
   ]
 
   const season = seasonArray.filter(({ date }) => date <= d).slice(-1)[0] || {
-    value: 0,
+    value: "WINTER",
     label: "Winter"
   }
   return season
+}
+
+export const getNextSeason = () => {
+  const { value: currentSeason } = getCurrentSeason()
+
+  const seasons = Object.keys(SEASON.ANIME).map((key, idx) => {
+    return { value: key, label: SEASON.ANIME[key], idx }
+  })
+  return seasons[
+    seasons.find((season) => season.value === currentSeason).idx + 1
+  ]
+}
+
+export const getCurrentYear = () => {
+  return new Date().getFullYear()
+}
+
+export const generateDate = ({ day, month, year }) => {
+  if (!day && !month && !year) return "unknown"
+
+  const res = []
+
+  if (day) {
+    res.push(day < 10 ? `0${day}` : day)
+  }
+  if (month) {
+    res.push(month < 10 ? `0${month}` : month)
+  }
+  if (year) {
+    res.push(year)
+  }
+  return res.join("-")
+}
+
+export const checkEmail = (value) => {
+  if (value.trim().length === 0) return "Email is required"
+  if (
+    !value
+      .toLowerCase()
+      .match(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      )
+  )
+    return "Please enter your email"
+}
+
+export const checkPassword = (value) => {
+  if (value.trim().length === 0) return "Password is required"
+  if (value.trim().length < 6) return "Password must be at least 6 characters"
+}
+
+export const checkConfirmPassword = (password, confirmPassword) => {
+  if (confirmPassword.trim().length === 0) return "Confirm password is required"
+  if (confirmPassword !== password)
+    return "Please make sure your passwords match"
 }
