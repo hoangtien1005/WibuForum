@@ -13,7 +13,7 @@ const options = {
 module.exports = (app) => {
   passport.use(
     new JwtStrategy(options, async function (jwt_payload, done) {
-      const { email, id } = jwt_payload.sub
+      const { username, id } = jwt_payload.sub
       const exp = jwt_payload.exp
 
       try {

@@ -26,16 +26,16 @@ module.exports = {
   },
 
   /**
-   * Issue the user's email and id
-   * @param {Object} payload - user's email and id
+   * Issue the user's username and id
+   * @param {Object} payload - user's username and id
    * @returns {string} user token
    */
-  issueJWT: ({ email, id }) => {
+  issueJWT: ({ username, id }) => {
     const expiresIn = "30s" // for testing
     // const expiresIn = "1d"
 
     const payload = {
-      sub: { email, id },
+      sub: { username, id },
       iat: Math.floor(Date.now())
     }
 

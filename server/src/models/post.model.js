@@ -2,13 +2,13 @@ const { pgp } = require("../config/db.config")
 const { STATE } = require("../constants")
 const { queryDB } = require("../services/database.service")
 
-class UserModel {
-  table = new pgp.helpers.TableName({ table: "user" })
+class PostModel {
+  table = new pgp.helpers.TableName({ table: "post" })
 
   async get(page = 1, perPage = 50) {
     const queryString = `
       SELECT *, COUNT(*) OVER() as full_count
-      FROM $(table) WHERE is_admin = 'false'
+      FROM $(table)
       ORDER BY id LIMIT $(perPage) OFFSET $(offset)
     `
     const args = {
@@ -19,10 +19,12 @@ class UserModel {
     return await queryDB("any", queryString, args)
   }
 
+  // TODO: get all the comments, tags and likes in this posts
   async getById(id) {
     const queryString = `
-    SELECT * FROM $(table)
-    WHERE id = $(id) AND is_admin = 'false'`
+        SELECT *
+        FROM $(table)
+        WHERE id = $(id)`
     const args = {
       table: this.table,
       id: id
@@ -30,52 +32,54 @@ class UserModel {
     return await queryDB("one", queryString, args)
   }
 
-  async getByUsername(username) {
-    const queryString = `SELECT * FROM $(table) WHERE username = $(username) AND is_admin = 'false'`
+  async getPostByUserId(id, page = 1, perPage = 50) {
+    const queryString = `
+    SELECT * FROM $(table), COUNT(*) OVER() as full_count
+    WHERE author_id = $(id)
+    LIMIT $(perPage) OFFSET $(offset)`
     const args = {
       table: this.table,
-      username: username
+      id: id,
+      perPage: perPage,
+      offset: (page - 1) * perPage
     }
-    return await queryDB("one", queryString, args)
+    return await queryDB("any", queryString, args)
   }
 
-  async create({ username, password }) {
+  async create(post) {
     const queryString = `
-      INSERT into $(table)(username, password)
-      VALUES ($(username), $(password))
+      INSERT INTO $(table)(author_id, content)
+      VALUES ($(author_id), $(content))
       RETURNING *`
     const args = {
       table: this.table,
-      username,
-      password
+      ...post
     }
     return await queryDB("one", queryString, args)
   }
 
   async deleteById(id) {
-    const queryString = `DELETE FROM $(table) WHERE user_id=$(id)`
+    const queryString = `DELETE FROM $(table) WHERE id=$(id)`
     const args = {
       table: this.table,
-      id,
-      _deleted: STATE.DELETED
+      id
     }
     return await queryDB("none", queryString, args)
   }
 
-  async update(user) {
+  async update(post) {
     const queryString = `
-         UPDATE $(table) SET username = $(username), password = $(password),
-         fullname = $(fullname), dob = $(dob),
-         WHERE user_id = $(user_id)
-         RETURNING *
+        UPDATE $(table) SET content = $(content)
+        WHERE id = $(id)
+        returning *
       `
 
     const args = {
       table: this.table,
-      ...user
+      ...post
     }
     return await queryDB("one", queryString, args)
   }
 }
 
-module.exports = new UserModel()
+module.exports = new PostModel()

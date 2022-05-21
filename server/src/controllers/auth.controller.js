@@ -6,12 +6,12 @@ module.exports = {
   // [POST] /auth/signup
   signup: async (req, res) => {
     try {
-      const { email, password } = req.body
+      const { username, password } = req.body
 
-      if (!email || !password)
+      if (!username || !password)
         return res.json(errorModel(400, "Missing required credentials."))
 
-      const response = await userModel.getByEmail(email)
+      const response = await userModel.getByUsername(username)
 
       if (response.data)
         return res.json(errorModel(400, "User already exists."))
@@ -19,11 +19,11 @@ module.exports = {
       const hashPassword = await genPassword(password)
 
       const { data: user } = await userModel.create({
-        email,
+        username,
         password: hashPassword
       })
 
-      const token = issueJWT({ email: user.email, id: user.user_id })
+      const token = issueJWT({ username: user.username, id: user.user_id })
 
       return res.json({ data: { user, token } })
     } catch (err) {
@@ -33,12 +33,12 @@ module.exports = {
   // [POST] /auth/login
   login: async (req, res) => {
     try {
-      const { email, password } = req.body
+      const { username, password } = req.body
 
-      if (!email || !password)
+      if (!username || !password)
         return res.json(errorModel(400, "Missing required credentials."))
 
-      const { data: user } = await userModel.getByEmail(email)
+      const { data: user } = await userModel.getByUsername(username)
 
       if (!user) return res.json(errorModel(400, "User not found."))
 
@@ -46,7 +46,7 @@ module.exports = {
 
       if (!isValid) return res.json(errorModel(400, "Invalid credentials."))
 
-      const token = issueJWT({ email: user.email, id: user.user_id })
+      const token = issueJWT({ username: user.username, id: user.user_id })
 
       return res.json({ data: { user, token } })
     } catch (err) {
@@ -56,12 +56,12 @@ module.exports = {
   // [POST] /auth/reset-password
   resetPassword: async (req, res) => {
     try {
-      const { email, newPassword } = req.body
+      const { username, newPassword } = req.body
 
-      if (!email || !newPassword)
+      if (!username || !newPassword)
         return res.json(errorModel(400, "Missing required credentials."))
 
-      const { data: user } = await userModel.getByEmail(email)
+      const { data: user } = await userModel.getByUsername(username)
 
       if (!user) return res.json(errorModel(400, "User not found."))
 
@@ -73,7 +73,7 @@ module.exports = {
       })
 
       const token = issueJWT({
-        email: updatedUser.email,
+        username: updatedUser.username,
         id: updatedUser.user_id
       })
 
