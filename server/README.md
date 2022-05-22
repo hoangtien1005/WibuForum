@@ -75,3 +75,48 @@
 <br>
 
 <br>
+
+## Reaction
+
+**[GET]**  ```/reaction?page=1&perPage=50```  &nbsp;&nbsp;  Get a list of reactions
+<br>
+
+**[GET]**  ```/reaction/:id```  &nbsp;&nbsp;  Get a reaction by id
+<br>
+
+**[GET]**  ```/reaction?author_id=1```  &nbsp;&nbsp;  Get a reaction by author id
+<br>
+
+**[GET]**  ```/reaction?post_id=1```  &nbsp;&nbsp;  Get a reaction by post id
+<br>
+
+**[POST]**  ```/reaction```  &nbsp;&nbsp;  Create a reaction (```author_id, post_id, content```)
+<br>
+
+**[DELETE]**  ```/reaction/:id```  &nbsp;&nbsp;  Delete the current reaction
+<br>
+
+<br>
+
+## Postman example: [View here](https://documenter.getpostman.com/view/17396960/Uyxoj4o9)
+
+<br>
+
+## Success response format: 
+```
+{
+  "data": {
+    ...
+  }
+}
+```
+
+## Error response format: 
+```
+{
+  "error": {
+    "code": ...         // HTTP status code
+    "message": ...      // Error message
+  }
+}
+```

@@ -80,7 +80,9 @@ module.exports = {
   // [PUT] /comment/:id
   update: async (req, res) => {
     try {
-      const { data } = await commentModel.update(req.body)
+      const { id } = req.params
+
+      const { data } = await commentModel.update({ ...req.body, id })
 
       if (!data) return res.json(errorModel(404, "Comment not found."))
 

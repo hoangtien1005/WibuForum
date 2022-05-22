@@ -8,7 +8,7 @@ router.get("/:id", commentController.getCommentById)
 router.get("/user/:id/comments", commentController.getCommentByUserId)
 router.get("/post/:id/comments", commentController.getCommentByPostId)
 router.post("/", commentController.create)
-router.put("/", commentController.update)
-router.delete("/", commentController.destroy)
+router.put("/:id", commentController.update)
+router.delete("/:id", commentController.destroy)
 
 module.exports = router
