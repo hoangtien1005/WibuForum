@@ -1,0 +1,51 @@
+@import '../../styles/config';
+
+
+.createPostBar{
+    margin-top: 24px;
+    display:flex;
+}
+.createPostBtn{
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.paddingTopNone{
+    padding-top:0px!important;
+}
+.titleBar{
+    display:flex;
+}
+.titleBar > p {
+    font-weight: 500;
+    color:$color-text-bold;
+}
+.viewAllBtn{
+    font-size:13px;
+    font-weight: 300;
+    text-decoration: none;
+    cursor: pointer;
+    &:hover {
+        color: $color-pr-1;
+        transition: all 0.3s;
+
+        div {
+            transition: all 0.3s;
+            color: $color-pr-1;
+        }
+
+    }
+}
+.listItem {
+    transition: all 0.3s;
+    
+    &:hover {
+        color: $color-pr-1;
+        transition: all 0.3s;
+        div {
+            transition: all 0.3s;
+            color: $color-pr-1;
+        }
+
+    }
+}

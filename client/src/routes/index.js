@@ -11,6 +11,8 @@ import MangaList from "../containers/HomeTemplate/MangaList"
 import StaffList from "../containers/HomeTemplate/StaffList"
 import CharacterList from "../containers/HomeTemplate/CharacterList"
 import ComingSoon from "../containers/HomeTemplate/ComingSoon"
+import PostList from "../containers/HomeTemplate/PostList/PostList"
+import Post from "../containers/HomeTemplate/Post/Post"
 
 // all endpoints
 const PATHS = {
@@ -93,7 +95,12 @@ const routeHome = [
   {
     exact: false,
     path: PATHS.FORUM,
-    component: ComingSoon
+    component: PostList
+  },
+  {
+    exact: false,
+    path: `${PATHS.FORUM}/:id`,
+    component: Post
   },
   {
     exact: true,

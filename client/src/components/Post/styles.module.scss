@@ -1,0 +1,51 @@
+@import '../../styles/config';
+
+.listItemHeader {
+    transition: all 0.3s;
+    text-decoration: none;
+    &:hover {
+        color: $color-pr-1;
+        transition: all 0.3s;
+        div {
+            transition: all 0.3s;
+            color: $color-pr-1;
+        }
+
+    }
+    cursor: pointer;
+}
+
+.listItem {
+    border-radius: 3px;
+    background-color:white;
+    padding:10px;
+    margin-bottom: 10px;
+}
+
+.listItemAvatar {
+    display:flex;
+    
+}
+.avatar {
+    margin-right:5px;
+
+}
+.authorName{
+    transition: all 0.3s;
+    text-decoration: none;
+    color: $color-pr-1;
+    font-size: 13px!important;
+    &:hover {
+        text-decoration: underline;
+        transition: all 0.3s;
+
+        div {
+            transition: all 0.3s;
+            color: $color-pr-1;
+        }
+
+    }
+
+    cursor: pointer;
+}
+
