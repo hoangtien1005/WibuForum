@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit"
 import animeReducer from "./anime/animeSlice"
-import blogReducer from "./blog/blogSlice"
+import postReducer from "./post/postSlice"
 import mangaReducer from "./manga/mangaSlice"
 import characterReducer from "./character/characterSlice"
 import staffReducer from "./staff/staffSlice"
@@ -18,7 +18,7 @@ const store = configureStore({
     staff: staffReducer,
     animeList: animeListReducer,
     home: homeReducer,
-    blog: blogReducer,
+    post: postReducer,
     mangaList: mangaListReducer,
     staffList: staffListReducer,
     characterList: characterListReducer

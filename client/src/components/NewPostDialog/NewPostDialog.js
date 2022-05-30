@@ -21,6 +21,7 @@ const NewPostDialog = ({ open, handleClose }) => {
             <Form className={styles.form}>
               <div className={styles.formGroup}>
                 <Field
+                  className={styles.postTitle}
                   placeholder="Post Title"
                   type="text"
                   name="postTitle"
@@ -34,9 +35,9 @@ const NewPostDialog = ({ open, handleClose }) => {
               </div>
               <div className={styles.formGroup}>
                 <TextareaAutosize
+                  className={styles.postContent}
                   placeholder="Post Content"
                   type="text"
-                  minRows={5}
                   name="postContent"
                   id="postContent"
                 />
@@ -50,7 +51,7 @@ const NewPostDialog = ({ open, handleClose }) => {
           )}
         </Formik>
       </DialogContent>
-      <DialogActions>
+      <DialogActions className={styles.buttonBar}>
         <Button onClick={handleClose}>Cancel</Button>
         <Button onClick={handleClose}>OK</Button>
       </DialogActions>
