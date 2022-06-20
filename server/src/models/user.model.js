@@ -39,14 +39,16 @@ class UserModel {
     return await queryDB("one", queryString, args)
   }
 
-  async create({ username, password }) {
+  async create({ username, fullname, dob, password }) {
     const queryString = `
-      INSERT into $(table)(username, password)
-      VALUES ($(username), $(password))
+      INSERT into $(table)(username, fullname, dob, password)
+      VALUES ($(username), $(fullname), $(dob), $(password))
       RETURNING *`
     const args = {
       table: this.table,
       username,
+      fullname,
+      dob,
       password
     }
     return await queryDB("one", queryString, args)

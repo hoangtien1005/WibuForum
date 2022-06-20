@@ -12,7 +12,19 @@
         }
 
     }
+    &:link {
+        text-decoration: none;
+    }
+    text-decoration: none;
     cursor: pointer;
+}
+
+.listItemLink {
+    &:link {
+        text-decoration: none;
+    }
+
+    text-decoration: none;
 }
 
 .listItem {
@@ -20,6 +32,13 @@
     background-color:white;
     padding:10px;
     margin-bottom: 10px;
+
+    &:link {
+        text-decoration: none;
+    }
+
+    text-decoration: none;
+
 }
 
 .listItemAvatar {

@@ -1,53 +1,81 @@
-// import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
-// import { callAnilistApi } from "../../utils/callApi"
-// import { generateDate } from "../../utils/utils"
-// import { blog_DETAILS_QUERY } from "../../queries/blog"
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
+import { callServerApi } from "../../utils/callApi"
 
-// const initialState = {
-//   loading: null,
-//   error: null,
-//   data: null
-// }
+const initialState = {
+  loading: null,
+  error: null,
+  data: null
+}
 
-// export const fetchBlogById = createAsyncThunk(
-//   "blog",
-//   async (blog_id) => {
-//     // const res = await callAnilistApi(BLOG_DETAILS_QUERY, {
-//     //   id: blog_id
-//     // })
+export const fetchPostById = createAsyncThunk("post", async (post_id) => {
+  const initialConfig = {
+    endpoint: `post/${post_id}`,
+    method: "GET"
+  }
 
-//     // const blog = res.data.blog
+  const { data } = await callServerApi(initialConfig)
 
-//     blog.dateOfBirth = generateDate(blog.dateOfBirth)
-//     const medias = blog?.media?.edges?.map((media) => media.node)
-//     return { data: { person: blog, medias } }
-//   }
-// )
+  const commentConfig = {
+    endpoint: `comment?post_id=${post_id}`,
+    method: "GET"
+  }
 
-// const blogSlice = createSlice({
-//   name: "blog",
-//   initialState,
-//   reducers: {},
-//   extraReducers: (builder) => {
-//     builder
-//       .addCase(fetchBlogById.pending, (state) => {
-//         state.loading = true
-//         state.data = null
-//         state.error = null
-//       })
-//       .addCase(fetchBlogById.fulfilled, (state, action) => {
-//         state.loading = null
-//         state.data = action.payload.data
-//         state.error = null
-//       })
-//       .addCase(fetchBlogById.rejected, (state, action) => {
-//         state.loading = null
-//         state.data = null
-//         state.error = action.error
-//       })
-//   }
-// })
+  const { data: userData } = await callServerApi({
+    endpoint: `user/${data.data.author_id}`,
+    method: "GET"
+  })
+  const { data: commentData } = await callServerApi(commentConfig)
 
-// export const blogActions = blogSlice.actions
-// export const selectblog = (state) => state.blog
-// export default blogSlice.reducer
+  return { postData: data, userData, commentData }
+})
+
+export const createPost = createAsyncThunk("create-post", async (payload) => {
+  const config = {
+    endpoint: `post`,
+    method: "POST",
+    payload: payload
+  }
+
+  await callServerApi(config)
+})
+
+export const createComment = createAsyncThunk(
+  "create-comment",
+  async (payload) => {
+    const config = {
+      endpoint: `comment`,
+      method: "POST",
+      payload: payload
+    }
+
+    await callServerApi(config)
+  }
+)
+
+const postSlice = createSlice({
+  name: "post",
+  initialState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchPostById.pending, (state) => {
+        state.loading = true
+        state.data = null
+        state.error = null
+      })
+      .addCase(fetchPostById.fulfilled, (state, action) => {
+        state.loading = null
+        state.data = action.payload
+        state.error = null
+      })
+      .addCase(fetchPostById.rejected, (state, action) => {
+        state.loading = null
+        state.data = null
+        state.error = action.error
+      })
+  }
+})
+
+export const postActions = postSlice.actions
+export const selectPost = (state) => state.post
+export default postSlice.reducer

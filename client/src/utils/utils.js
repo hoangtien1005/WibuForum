@@ -1,4 +1,5 @@
 import { MEDIA_CONSTANTS } from "./constants"
+import moment from "moment"
 
 const { SEASON } = MEDIA_CONSTANTS
 
@@ -65,6 +66,10 @@ export const getCurrentYear = () => {
   return new Date().getFullYear()
 }
 
+export const timeSince = (date) => {
+  return moment(date).fromNow()
+}
+
 export const generateDate = ({ day, month, year }) => {
   if (!day && !month && !year) return "unknown"
 
@@ -82,25 +87,35 @@ export const generateDate = ({ day, month, year }) => {
   return res.join("-")
 }
 
-export const checkEmail = (value) => {
-  if (value.trim().length === 0) return "Email is required"
+export const checkUsername = (value) => {
+  if (!value || value.trim().length === 0) return "Username is required"
+}
+
+export const checkFullname = (value) => {
+  if (!value || value.trim().length === 0) return "Full name is required"
+}
+
+export const checkPassword = (value) => {
+  if (!value || value.trim().length === 0) return "Password is required"
+  if (value.trim().length < 6) return "Password must be at least 6 characters"
+}
+
+export const checkDob = (value) => {
+  if (!value || value.trim().length === 0) return "Date of birth is required"
   if (
     !value
       .toLowerCase()
       .match(
-        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        /^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/
       )
   )
-    return "Please enter your email"
+    return "Invalid date format"
 }
 
-export const checkPassword = (value) => {
-  if (value.trim().length === 0) return "Password is required"
-  if (value.trim().length < 6) return "Password must be at least 6 characters"
+export const checkTitle = (value) => {
+  if (!value || value.trim().length === 0) return "Title is required"
 }
 
-export const checkConfirmPassword = (password, confirmPassword) => {
-  if (confirmPassword.trim().length === 0) return "Confirm password is required"
-  if (confirmPassword !== password)
-    return "Please make sure your passwords match"
+export const checkContent = (value) => {
+  if (!value || value.trim().length === 0) return "Content is required"
 }

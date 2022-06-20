@@ -8,17 +8,17 @@ import styles from "./styles.module.scss"
 import Button from "../../../components/ui/Button"
 import FormContainer from "../../../components/ui/FormContainer"
 
-import { checkEmail } from "../../../utils/utils"
+import { checkUsername } from "../../../utils/utils"
 
 const Login = () => (
   <FormContainer>
     <h1 className={styles.formTitle}>Reset Password</h1>
     <Formik
-      initialValues={{ email: "" }}
+      initialValues={{ username: "" }}
       validate={(values) => {
         const errors = {}
-        const emailError = checkEmail(values.email)
-        if (emailError) errors.email = emailError
+        const usernameError = checkUsername(values.username)
+        if (usernameError) errors.username = usernameError
         return errors
       }}
       onSubmit={(values, { setSubmitting }) => {
@@ -31,11 +31,11 @@ const Login = () => (
       {({ isSubmitting }) => (
         <Form className={styles.form}>
           <div className={styles.formGroup}>
-            <label htmlFor="email">Email</label>
-            <Field type="email" name="email" id="email" />
+            <label htmlFor="username">Username</label>
+            <Field type="text" name="username" id="username" />
             <ErrorMessage
               className="error-message"
-              name="email"
+              name="username"
               component="div"
             />
           </div>

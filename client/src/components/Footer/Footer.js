@@ -15,13 +15,13 @@ import styles from "./styles.module.scss"
 const Footer = () => {
   const footers = [
     [
-      { label: "Linkedin", link: "https://www.linkedin.com/in/hoangtien1005" },
-      { label: "Facebook", link: "https://www.facebook.com/hoangtien1005" },
+      { label: "Linkedin", link: "https://www.linkedin.com" },
+      { label: "Facebook", link: "https://www.facebook.com" },
       {
         label: "HackerRank",
-        link: "https://hackerrank.com/profile/HoangTien1005"
+        link: "https://hackerrank.com"
       },
-      { label: "Github", link: "https://github.com/hoangtien1005" }
+      { label: "Github", link: "https://github.com" }
     ],
     [
       { label: "Donate", link: "https://anilist.co/forum/thread/2340" },
@@ -53,16 +53,16 @@ const Footer = () => {
                 <Link to="/">
                   <img style={{ width: "100px" }} src={Logo} alt="Logo" />
                 </Link>
-                <a className={styles.personalLink} href="tel:+84776775284">
+                <a className={styles.personalLink} href="tel:+84123456789">
                   <PhoneEnabledIcon className={styles.personalIcon} />
-                  <span>0776775284</span>
+                  <span>0123456789</span>
                 </a>
                 <a
                   className={styles.personalLink}
-                  href="mailto:nguyenhoangtien100501@gmail.com"
+                  href="mailto:WibuForum@gmail.com"
                 >
                   <EmailIcon className={styles.personalIcon} />
-                  <span>nguyenhoangtien100501@gmail.com</span>
+                  <span>WibuForum@gmail.com</span>
                 </a>
                 <a
                   className={styles.personalLink}

@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useHistory } from "react-router-dom"
 import { Formik, Form, Field, ErrorMessage } from "formik"
 import { PATHS } from "../../../routes"
 import clsx from "clsx"
@@ -10,40 +10,63 @@ import Button from "../../../components/ui/Button"
 import FormContainer from "../../../components/ui/FormContainer"
 import Alert from "../../../components/ui/Alert"
 
-import { checkEmail, checkPassword } from "../../../utils/utils"
+import { checkUsername, checkPassword } from "../../../utils/utils"
+import {
+  authActions,
+  Login,
+  selectAuth
+} from "../../../features/auth/authSlice"
+import { useDispatch, useSelector } from "react-redux"
+import Loading from "../../../components/Loading"
 
-const Login = () => {
-  const [submit, setSubmit] = useState(false)
+const Component = () => {
+  const { Reset } = authActions
+
+  const { loading, success, error } = useSelector(selectAuth)
+  const dispatch = useDispatch()
+  const history = useHistory()
 
   return (
     <>
+      {loading && <Loading />}
+      {error && <Alert severity="error" message={error.message} />}
+      {success && <Alert message="Login successfully, redirecting..." />}
       <FormContainer>
         <h1 className={styles.formTitle}>Login</h1>
         <Formik
-          initialValues={{ email: "", password: "" }}
+          initialValues={{ username: "", password: "" }}
           validate={(values) => {
             const errors = {}
-            const emailError = checkEmail(values.email)
+            const usernameError = checkUsername(values.username)
             const passwordError = checkPassword(values.password)
-            if (emailError) errors.email = emailError
+            if (usernameError) errors.username = usernameError
             if (passwordError) errors.password = passwordError
             return errors
           }}
           onSubmit={(values, { setSubmitting }) => {
-            setTimeout(() => {
-              setSubmit(true)
-              setSubmitting(false)
-            }, 1000)
+            dispatch(Login(values)).then((res) => {
+              if (res.error) {
+                setTimeout(() => {
+                  dispatch(Reset())
+                  setSubmitting(false)
+                }, 3000)
+              } else if (res.payload) {
+                setTimeout(() => {
+                  setSubmitting(false)
+                  history.push("/")
+                }, 2000)
+              }
+            })
           }}
         >
           {({ isSubmitting }) => (
             <Form className={styles.form}>
               <div className={styles.formGroup}>
-                <label htmlFor="email">Email</label>
-                <Field type="email" name="email" id="email" />
+                <label htmlFor="username">Username</label>
+                <Field type="text" name="username" id="username" />
                 <ErrorMessage
                   className="error-message"
-                  name="email"
+                  name="username"
                   component="div"
                 />
               </div>
@@ -77,9 +100,8 @@ const Login = () => {
           </Link>
         </div>
       </FormContainer>
-      {submit && <Alert message="Login successfully" />}
     </>
   )
 }
 
-export default Login
+export default Component

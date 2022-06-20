@@ -1,15 +1,19 @@
 import styles from "./styles.module.scss"
 import Typography from "@mui/material/Typography"
+import { Link } from "react-router-dom"
 import { Avatar, ListItemAvatar, ListItemText } from "@mui/material"
-const Blog = () => {
+import { PATHS } from "../../routes"
+const Post = ({ username, title, content, id }) => {
   return (
     <>
       <div className={styles.listItem}>
-        <ListItemText
-          className={styles.listItemHeader}
-          primary="Brunch this weekend?"
-          secondary={<>{"I'll be in your neighborhood doing errands this…"}</>}
-        />
+        <Link className={styles.listItemLink} to={`${PATHS.FORUM}/${id}`}>
+          <ListItemText
+            className={styles.listItemHeader}
+            primary={title}
+            secondary={content}
+          />
+        </Link>
         <ListItemAvatar className={styles.listItemAvatar}>
           <Avatar
             className={styles.avatar}
@@ -17,11 +21,11 @@ const Blog = () => {
             sx={{ width: 24, height: 24 }}
             src=""
           />
-          <Typography className={styles.authorName}>ádasd</Typography>
+          <Typography className={styles.authorName}>{username}</Typography>
         </ListItemAvatar>
       </div>
     </>
   )
 }
 
-export default Blog
+export default Post

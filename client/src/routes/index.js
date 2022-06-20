@@ -1,6 +1,7 @@
 import Home from "../containers/HomeTemplate/Home"
 import SignUp from "../containers/HomeTemplate/SignUp"
 import Login from "../containers/HomeTemplate/Login"
+import Logout from "../containers/HomeTemplate/Logout"
 import ForgotPassword from "../containers/HomeTemplate/ForgotPassword"
 import AnimeList from "../containers/HomeTemplate/AnimeList"
 import Anime from "../containers/HomeTemplate/Anime"
@@ -11,8 +12,8 @@ import MangaList from "../containers/HomeTemplate/MangaList"
 import StaffList from "../containers/HomeTemplate/StaffList"
 import CharacterList from "../containers/HomeTemplate/CharacterList"
 import ComingSoon from "../containers/HomeTemplate/ComingSoon"
-import PostList from "../containers/HomeTemplate/PostList/PostList"
-import Post from "../containers/HomeTemplate/Post/Post"
+import PostList from "../containers/HomeTemplate/PostList"
+import Post from "../containers/HomeTemplate/Post"
 
 // all endpoints
 const PATHS = {
@@ -93,12 +94,12 @@ const routeHome = [
     component: Character
   },
   {
-    exact: false,
+    exact: true,
     path: PATHS.FORUM,
     component: PostList
   },
   {
-    exact: false,
+    exact: true,
     path: `${PATHS.FORUM}/:id`,
     component: Post
   },
@@ -135,7 +136,7 @@ const routeHome = [
   {
     exact: true,
     path: PATHS.LOGOUT,
-    component: ComingSoon
+    component: Logout
   }
 ]
 

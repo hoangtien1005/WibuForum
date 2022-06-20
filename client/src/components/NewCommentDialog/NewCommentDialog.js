@@ -1,26 +1,22 @@
 import Button from "@mui/material/Button"
 import Dialog from "@mui/material/Dialog"
-import DialogActions from "@mui/material/DialogActions"
 import DialogContent from "@mui/material/DialogContent"
 import DialogTitle from "@mui/material/DialogTitle"
-import TextareaAutosize from "@mui/material/TextareaAutosize"
 import { ErrorMessage, Field, Form, Formik } from "formik"
 import * as React from "react"
-import { checkContent, checkTitle } from "../../utils/utils"
+import { checkContent } from "../../utils/utils"
 import styles from "./styles.module.scss"
 
-const NewPostDialog = ({ open, handleClose, handleConfirm }) => {
+const NewCommentDialog = ({ open, handleClose, handleConfirm }) => {
   return (
     <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>New Post</DialogTitle>
+      <DialogTitle>New Comment</DialogTitle>
       <DialogContent>
         <Formik
-          initialValues={{ title: "", content: "" }}
+          initialValues={{ content: "" }}
           validate={(values) => {
             const errors = {}
-            const titleError = checkTitle(values.title)
             const contentError = checkContent(values.content)
-            if (titleError) errors.title = titleError
             if (contentError) errors.content = contentError
             return errors
           }}
@@ -32,23 +28,9 @@ const NewPostDialog = ({ open, handleClose, handleConfirm }) => {
             <Form className={styles.form}>
               <div className={styles.formGroup}>
                 <Field
-                  className={styles.postTitle}
-                  placeholder="Post Title"
-                  type="text"
-                  name="title"
-                  id="title"
-                />
-                <ErrorMessage
-                  className={styles.errorMessage}
-                  name="title"
-                  component="div"
-                />
-              </div>
-              <div className={styles.formGroup}>
-                <Field
                   as="textarea"
                   className={styles.postContent}
-                  placeholder="Post Content"
+                  placeholder="Comment"
                   type="text"
                   name="content"
                   id="content"
@@ -74,4 +56,4 @@ const NewPostDialog = ({ open, handleClose, handleConfirm }) => {
   )
 }
 
-export default NewPostDialog
+export default NewCommentDialog

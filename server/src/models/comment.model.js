@@ -4,17 +4,31 @@ const { queryDB } = require("../services/database.service")
 
 class CommentModel {
   table = new pgp.helpers.TableName({ table: "comment" })
+  userTable = new pgp.helpers.TableName({ table: "user" })
 
-  async get(page = 1, perPage = 50) {
+  async get(page = 1, perPage = 50, post_id, author_id) {
+    let conditionString = ""
+
+    if (post_id) conditionString = `post_id = $(post_id)`
+    if (author_id) conditionString = ` author_id = $(author_id)`
+
+    if (conditionString.length > 0) conditionString = "WHERE " + conditionString
+
     const queryString = `
-      SELECT *, COUNT(*) OVER() as full_count
-      FROM $(table)
-      ORDER BY id LIMIT $(perPage) OFFSET $(offset)
+      SELECT $(table).*, $(userTable).username, COUNT(*) OVER() as full_count
+      FROM $(table) JOIN $(userTable)
+      ON $(table).author_id = $(userTable).id
+      ${conditionString} 
+      ORDER BY $(table).created_at DESC
+      LIMIT $(perPage) OFFSET $(offset)
     `
     const args = {
       table: this.table,
+      userTable: this.userTable,
       perPage: Math.max(perPage, 50),
-      offset: (page - 1) * perPage
+      offset: (page - 1) * perPage,
+      post_id,
+      author_id
     }
     return await queryDB("any", queryString, args)
   }

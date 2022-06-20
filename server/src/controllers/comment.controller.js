@@ -7,9 +7,14 @@ module.exports = {
   // [GET] /comment
   get: async (req, res) => {
     try {
-      const { page = 1, perPage = 50 } = req.query
+      const { page = 1, perPage = 50, post_id, author_id } = req.query
 
-      const { data: documents } = await commentModel.get(page, perPage)
+      const { data: documents } = await commentModel.get(
+        page,
+        perPage,
+        post_id,
+        author_id
+      )
 
       const data = formatResponseData(page, perPage, documents)
 
@@ -53,6 +58,8 @@ module.exports = {
   getCommentByPostId: async (req, res) => {
     try {
       const { post_id } = req.query
+
+      console.log(post_id)
 
       const { data } = await commentModel.getCommentByPostId(post_id)
 

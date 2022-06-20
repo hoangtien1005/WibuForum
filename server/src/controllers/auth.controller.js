@@ -6,9 +6,9 @@ module.exports = {
   // [POST] /auth/signup
   signup: async (req, res) => {
     try {
-      const { username, password } = req.body
+      const { username, fullname, dob, password } = req.body
 
-      if (!username || !password)
+      if (!username || !fullname || !dob || !password)
         return res.json(errorModel(400, "Missing required credentials."))
 
       const response = await userModel.getByUsername(username)
@@ -20,6 +20,8 @@ module.exports = {
 
       const { data: user } = await userModel.create({
         username,
+        fullname,
+        dob,
         password: hashPassword
       })
 

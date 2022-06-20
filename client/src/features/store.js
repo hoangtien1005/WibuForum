@@ -1,6 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit"
 import animeReducer from "./anime/animeSlice"
 import postReducer from "./post/postSlice"
+import postListReducer from "./postList/postListSlice"
 import mangaReducer from "./manga/mangaSlice"
 import characterReducer from "./character/characterSlice"
 import staffReducer from "./staff/staffSlice"
@@ -9,6 +10,7 @@ import homeReducer from "./home/homeSlice"
 import mangaListReducer from "./mangaList/mangaListSlice"
 import staffListReducer from "./staffList/staffListSlice"
 import characterListReducer from "./characterList/characterListSlice"
+import authReducer from "./auth/authSlice"
 
 const store = configureStore({
   reducer: {
@@ -19,9 +21,11 @@ const store = configureStore({
     animeList: animeListReducer,
     home: homeReducer,
     post: postReducer,
+    postList: postListReducer,
     mangaList: mangaListReducer,
     staffList: staffListReducer,
-    characterList: characterListReducer
+    characterList: characterListReducer,
+    auth: authReducer
   }
 })
 

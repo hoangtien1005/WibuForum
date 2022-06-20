@@ -5,14 +5,19 @@ const { queryDB } = require("../services/database.service")
 class PostModel {
   table = new pgp.helpers.TableName({ table: "post" })
 
+  userTable = new pgp.helpers.TableName({ table: "user" })
+
   async get(page = 1, perPage = 50) {
     const queryString = `
-      SELECT *, COUNT(*) OVER() as full_count
-      FROM $(table)
-      ORDER BY id LIMIT $(perPage) OFFSET $(offset)
+    SELECT $(table).id, author_id, created_at, content, title, username, COUNT(*) OVER() as full_count
+      FROM $(table) JOIN $(userTable)
+      ON $(table).author_id = $(userTable).id
+      ORDER BY $(table).created_at DESC
+      LIMIT $(perPage) OFFSET $(offset)
     `
     const args = {
       table: this.table,
+      userTable: this.userTable,
       perPage: Math.max(perPage, 50),
       offset: (page - 1) * perPage
     }
@@ -48,8 +53,8 @@ class PostModel {
 
   async create(post) {
     const queryString = `
-      INSERT INTO $(table)(author_id, content)
-      VALUES ($(author_id), $(content))
+      INSERT INTO $(table)(author_id, title, content)
+      VALUES ($(author_id), $(title), $(content))
       RETURNING *`
     const args = {
       table: this.table,

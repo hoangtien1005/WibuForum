@@ -1,28 +1,23 @@
+import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { useEffect, useState, useCallback } from "react"
-import { useLocation, useParams } from "react-router-dom"
-
-import styles from "./styles.module.scss"
 import Loading from "../../../components/Loading"
-import ResultNotFound from "../../../components/ResultNotFound"
 import LoadingDetailsPage from "../../../components/LoadingDetailsPage"
-import MediaDetailsPage from "../../../components/MediaDetailsPage"
-
-import { selectAnime, fetchAnimeById } from "../../../features/anime/animeSlice"
 import PostPage from "../../../components/PostPage"
+import ResultNotFound from "../../../components/ResultNotFound"
+import {
+  fetchPostList,
+  selectPostList
+} from "../../../features/postList/postListSlice"
 
-const Component = ({}) => {
-  const { loading, data, error } = useSelector(selectAnime)
-
-  const location = useLocation()
-  const { id } = useParams()
+const Component = () => {
+  const { loading, data, error } = useSelector(selectPostList)
 
   const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(fetchAnimeById(id))
+    dispatch(fetchPostList())
     window.scrollTo(0, 0)
-  }, [dispatch, id])
+  }, [dispatch])
 
   return (
     <>

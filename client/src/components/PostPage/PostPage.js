@@ -1,20 +1,27 @@
-import styles from "./styles.module.scss"
-import * as React from "react"
-import Grid from "@mui/material/Grid"
 import Box from "@mui/material/Box"
-import GridContainer from "../ui/GridContainer"
+import Grid from "@mui/material/Grid"
 import List from "@mui/material/List"
-import ListItem from "@mui/material/ListItem"
-import Divider from "@mui/material/Divider"
-import ListItemText from "@mui/material/ListItemText"
-import ListItemAvatar from "@mui/material/ListItemAvatar"
-import Avatar from "@mui/material/Avatar"
 import Typography from "@mui/material/Typography"
-import Blog from "../Post/Post"
+import * as React from "react"
 import NewPostDialog from "../NewPostDialog/NewPostDialog"
+import Post from "../Post/Post"
 import Button from "../ui/Button"
-const BlogPage = () => {
+import GridContainer from "../ui/GridContainer"
+import styles from "./styles.module.scss"
+
+import { createPost } from "../../features/post/postSlice"
+import { fetchPostList } from "../../features/postList/postListSlice"
+import { useDispatch, useSelector } from "react-redux"
+import { selectAuth } from "../../features/auth/authSlice"
+
+const PostPage = ({ data }) => {
   const [open, setOpen] = React.useState(false)
+
+  const dispatch = useDispatch()
+
+  const { data: userData } = useSelector(selectAuth)
+
+  const posts = data.data.documents
 
   const handleClickOpen = () => {
     setOpen(true)
@@ -23,6 +30,14 @@ const BlogPage = () => {
   const handleClose = () => {
     setOpen(false)
   }
+
+  const handleConfirm = (values) => {
+    console.log(values)
+    dispatch(createPost({ ...values, author_id: userData?.user.id }))
+    dispatch(fetchPostList())
+    setOpen(false)
+  }
+
   return (
     <>
       <GridContainer spacing={3}>
@@ -35,6 +50,7 @@ const BlogPage = () => {
             <NewPostDialog
               open={open}
               handleClose={handleClose}
+              handleConfirm={handleConfirm}
             ></NewPostDialog>
           </div>
         </Grid>
@@ -49,27 +65,9 @@ const BlogPage = () => {
         </Grid>
         <Grid item className={styles.paddingTopNone} xs={12}>
           <List sx={{ width: "100%" }}>
-            <Blog></Blog>
-            <Blog></Blog>
-            <Blog></Blog>
-            <Blog></Blog>
-          </List>
-        </Grid>
-        <Grid item xs={12}>
-          <div className={styles.titleBar}>
-            <Typography className={styles.title}>
-              Release Discussion Posts
-            </Typography>
-            <Box sx={{ flexGrow: 1 }} />
-            <Typography className={styles.viewAllBtn}>View All</Typography>
-          </div>
-        </Grid>
-        <Grid item className={styles.paddingTopNone} xs={12}>
-          <List sx={{ width: "100%" }}>
-            <Blog></Blog>
-            <Blog></Blog>
-            <Blog></Blog>
-            <Blog></Blog>
+            {posts.map((post) => {
+              return <Post key={post.id} {...post} />
+            })}
           </List>
         </Grid>
       </GridContainer>
@@ -77,4 +75,4 @@ const BlogPage = () => {
   )
 }
 
-export default BlogPage
+export default PostPage
