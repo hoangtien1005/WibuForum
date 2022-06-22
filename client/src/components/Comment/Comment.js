@@ -4,7 +4,7 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder"
 import Box from "@mui/material/Box"
 import { Avatar, IconButton, ListItemAvatar, ListItemText } from "@mui/material"
 import { timeSince } from "../../utils/utils"
-const Comment = ({ content, created_at, username }) => {
+const Comment = ({ content, created_at, username, reaction }) => {
   return (
     <>
       <div className={styles.listItem}>
@@ -15,9 +15,6 @@ const Comment = ({ content, created_at, username }) => {
             {timeSince(created_at)}
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
-          <IconButton className={styles.likeBtn} size="small" disableRipple>
-            <FavoriteBorderIcon />
-          </IconButton>
         </ListItemAvatar>
         <ListItemText className={styles.listItemHeader} primary={content} />
       </div>

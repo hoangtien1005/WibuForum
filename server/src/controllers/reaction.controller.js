@@ -7,9 +7,14 @@ module.exports = {
   // [GET] /reaction
   get: async (req, res) => {
     try {
-      const { page = 1, perPage = 50 } = req.query
+      const { page = 1, perPage = 50, post_id, author_id } = req.query
 
-      const { data: documents } = await reactionModel.get(page, perPage)
+      const { data: documents } = await reactionModel.get(
+        page,
+        perPage,
+        post_id,
+        author_id
+      )
 
       const data = formatResponseData(page, perPage, documents)
 

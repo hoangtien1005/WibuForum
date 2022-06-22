@@ -4,8 +4,8 @@ const { queryDB } = require("../services/database.service")
 
 class PostModel {
   table = new pgp.helpers.TableName({ table: "post" })
-
   userTable = new pgp.helpers.TableName({ table: "user" })
+  reactionTable = new pgp.helpers.TableName({ table: "reaction" })
 
   async get(page = 1, perPage = 50) {
     const queryString = `
@@ -21,6 +21,7 @@ class PostModel {
       perPage: Math.max(perPage, 50),
       offset: (page - 1) * perPage
     }
+
     return await queryDB("any", queryString, args)
   }
 

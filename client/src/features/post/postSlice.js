@@ -52,6 +52,32 @@ export const createComment = createAsyncThunk(
   }
 )
 
+export const createReaction = createAsyncThunk(
+  "create-reaction",
+  async (payload) => {
+    const config = {
+      endpoint: `post/${payload.post_id}/reactions`,
+      method: "POST",
+      payload: payload
+    }
+
+    await callServerApi(config)
+  }
+)
+
+export const removeReaction = createAsyncThunk(
+  "remove-reaction",
+  async (payload) => {
+    const config = {
+      endpoint: `post/${payload.post_id}/reactions`,
+      method: "DELETE",
+      payload: payload
+    }
+
+    await callServerApi(config)
+  }
+)
+
 const postSlice = createSlice({
   name: "post",
   initialState,

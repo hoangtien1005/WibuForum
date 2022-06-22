@@ -1,4 +1,5 @@
 const postModel = require("../models/post.model")
+const reactionModel = require("../models/reaction.model")
 const errorModel = require("../models/error.model")
 const { ERROR_CODE } = require("../constants")
 const { formatResponseData } = require("../utils")
@@ -26,9 +27,11 @@ module.exports = {
 
       const { data } = await postModel.getById(id)
 
+      const { data: reactionData } = await reactionModel.getReactionByPostId(id)
+
       if (!data) return res.json(errorModel(404, "Post not found."))
 
-      return res.json({ data })
+      return res.json({ data: { ...data, reaction: reactionData } })
     } catch (err) {
       return res.json(errorModel())
     }
@@ -44,6 +47,49 @@ module.exports = {
       if (!data) return res.json(errorModel(404, "Post not found."))
 
       return res.json({ data })
+    } catch (err) {
+      return res.json(errorModel())
+    }
+  },
+
+  // [GET] /post/:id/reactions
+  getReactionByPostId: async (req, res) => {
+    try {
+      const { id } = req.params
+
+      const { data } = await reactionModel.getReactionByPostId(id)
+
+      if (!data) return res.json(errorModel(404, "Post not found."))
+
+      return res.json({ data })
+    } catch (err) {
+      return res.json(errorModel())
+    }
+  },
+
+  // [POST] /post/:id/reactions
+  createReaction: async (req, res) => {
+    try {
+      const { id } = req.params
+
+      const { data } = await reactionModel.create(req.body)
+
+      if (!data) return res.json(errorModel(404, "Post not found."))
+
+      return res.json({ data })
+    } catch (err) {
+      return res.json(errorModel())
+    }
+  },
+
+  // [DELETE] /post/:id/reactions
+  destroyReaction: async (req, res) => {
+    try {
+      const { id } = req.params
+
+      const { author_id } = req.body
+
+      const { data } = await reactionModel.destroy(author_id, id)
     } catch (err) {
       return res.json(errorModel())
     }

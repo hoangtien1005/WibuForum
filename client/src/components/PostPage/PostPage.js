@@ -44,14 +44,21 @@ const PostPage = ({ data }) => {
         <Grid item xs={12}>
           <div className={styles.createPostBar}>
             <Box sx={{ flexGrow: 1 }} />
-            <Button className={styles.createPostBtn} onClick={handleClickOpen}>
-              Create Post
-            </Button>
-            <NewPostDialog
-              open={open}
-              handleClose={handleClose}
-              handleConfirm={handleConfirm}
-            ></NewPostDialog>
+            {userData && (
+              <>
+                <Button
+                  className={styles.createPostBtn}
+                  onClick={handleClickOpen}
+                >
+                  Create Post
+                </Button>
+                <NewPostDialog
+                  open={open}
+                  handleClose={handleClose}
+                  handleConfirm={handleConfirm}
+                ></NewPostDialog>
+              </>
+            )}
           </div>
         </Grid>
         <Grid item xs={12}>

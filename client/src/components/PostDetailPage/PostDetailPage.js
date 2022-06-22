@@ -8,9 +8,13 @@ import List from "@mui/material/List"
 import ListItemAvatar from "@mui/material/ListItemAvatar"
 import ListItemText from "@mui/material/ListItemText"
 import Typography from "@mui/material/Typography"
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { createComment } from "../../features/post/postSlice"
+import {
+  createComment,
+  createReaction,
+  removeReaction
+} from "../../features/post/postSlice"
 import { timeSince } from "../../utils/utils"
 import Comment from "../Comment/Comment"
 import NewCommentDialog from "../NewCommentDialog/NewCommentDialog"
@@ -19,16 +23,29 @@ import styles from "./styles.module.scss"
 import { selectAuth } from "../../features/auth/authSlice"
 
 const PostDetailPage = ({ data }) => {
-  const [open, setOpen] = React.useState(false)
   const { postData, userData, commentData } = data
 
   const { data: currentUserData } = useSelector(selectAuth)
 
   const comments = commentData.data.documents
 
-  const totalComments = commentData.data.totalCount
+  const commentCount = commentData.data.totalCount
 
   const dispatch = useDispatch()
+
+  const [open, setOpen] = React.useState(false)
+  const [currentReaction, setCurrentReaction] = useState(
+    postData.data.reaction.length
+  )
+  const [reacted, setReacted] = useState(false)
+
+  useEffect(() => {
+    setReacted(
+      postData.data.reaction.some(
+        (item) => item.author_id === currentUserData?.user.id
+      )
+    )
+  }, [])
 
   const handleClickOpen = () => {
     setOpen(true)
@@ -36,6 +53,22 @@ const PostDetailPage = ({ data }) => {
 
   const handleClose = () => {
     setOpen(false)
+  }
+
+  const handleReact = () => {
+    const payload = {
+      post_id: postData.data.id,
+      author_id: currentUserData?.user.id
+    }
+    if (reacted) {
+      dispatch(removeReaction(payload))
+      setReacted(false)
+      setCurrentReaction((prevState) => prevState - 1)
+    } else {
+      dispatch(createReaction(payload))
+      setReacted(true)
+      setCurrentReaction((prevState) => prevState + 1)
+    }
   }
 
   const handleConfirm = (values) => {
@@ -71,35 +104,37 @@ const PostDetailPage = ({ data }) => {
               className={styles.listItemText}
               primary={postData?.data?.content}
             />
-
-            <div className={styles.postBtn}>
-              <Button
-                onClick={handleClickOpen}
-                className={styles.commentBtn}
-                startIcon={<ChatBubbleIcon />}
-                variant="contained"
-              >
-                Comment
-              </Button>
-              <NewCommentDialog
-                open={open}
-                handleClose={handleClose}
-                handleConfirm={handleConfirm}
-              />
-              <Button
-                className={styles.heartBtn}
-                endIcon={<FavoriteIcon />}
-                variant="contained"
-              >
-                0
-              </Button>
-            </div>
+            {currentUserData && (
+              <div className={styles.postBtn}>
+                <Button
+                  onClick={handleClickOpen}
+                  className={styles.commentBtn}
+                  startIcon={<ChatBubbleIcon />}
+                  variant="contained"
+                >
+                  Comment
+                </Button>
+                <NewCommentDialog
+                  open={open}
+                  handleClose={handleClose}
+                  handleConfirm={handleConfirm}
+                />
+                <Button
+                  onClick={handleReact}
+                  className={styles.heartBtn}
+                  endIcon={<FavoriteIcon />}
+                  variant="contained"
+                >
+                  {currentReaction}
+                </Button>
+              </div>
+            )}
           </div>
         </Grid>
         <Grid item xs={12}>
           <div className={styles.commentTitle}>
             <Typography className={styles.title}>
-              {totalComments || 0} Comment
+              {commentCount || 0} Comment
             </Typography>
           </div>
         </Grid>

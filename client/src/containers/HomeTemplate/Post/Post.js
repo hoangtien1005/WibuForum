@@ -13,6 +13,8 @@ const Component = ({}) => {
   const location = useLocation()
   const { id } = useParams()
 
+  console.log(data)
+
   const dispatch = useDispatch()
 
   useEffect(() => {
