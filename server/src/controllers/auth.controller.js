@@ -38,7 +38,7 @@ module.exports = {
       const { username, password } = req.body
 
       if (!username || !password)
-        return res.json(errorModel(400, "Missing required credentials."))
+        return res.json(errorModel(400, "Missing required credentials"))
 
       const { data: user } = await userModel.getByUsername(username)
 
